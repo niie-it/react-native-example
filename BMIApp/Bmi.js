@@ -33,23 +33,56 @@ const styles = StyleSheet.create({
     },
     center: {
         alignItems: 'center'
+    },
+    header: {
+        paddingTop: 30,
+        paddingBottom: 10,
+        textAlign: "center",
+        fontSize: 30,
+        fontWeight: "bold",
+    },
+    resultText: {
+        paddingTop: 20,
+        paddingBottom: 10,
+        textAlign: "center",
+        fontSize: 30,
+        color: 'blue'
     }
 });
 
 export const BMI = () => {
-    const [weight, setWeight] = useState(0);
-    const [height, setHeight] = useState(0);
+    const [weight, setWeight] = useState('0');
+    const [height, setHeight] = useState('0');
     const [bmi, setBmi] = useState(0);
+    const [bmiResult, setBmiResult] = useState('');
 
-    const compute = () => {
+    const compute = (w, h) => {
         console.log('On pressed!');
-        let weight = parseFloat(weight);
-        let height = parseFloat(height);
-        setBmi(weight / Math.pow(height / 100, 2));
+        let weight = parseFloat(w);
+        let height = parseFloat(h);
+        let result = weight / Math.pow(height / 100, 2);
+        setBmi(result);
+        result = result.toFixed(2);
+        if (result < 18.5) {
+            setBmiResult('Underweight');
+        }
+        else if (result < 25) {
+            setBmiResult('Normal weight');
+        }
+        else if (result < 30) {
+            setBmiResult('Overweight');
+        }
+        else if (result >= 30) {
+            setBmiResult('Obese');
+        }
+        else {
+            setBmiResult('');
+        }
     }
 
     return (
         <View style={styles.container}>
+            <Text style={styles.header}>BMI Calculator</Text>
             <View style={styles.group}>
                 <Text style={styles.title}>Weight (KG)</Text>
                 <TextInput style={styles.input}
@@ -67,13 +100,14 @@ export const BMI = () => {
             </View>
             <View style={styles.center}>
                 <View style={styles.group}>
-                    <Text style={styles.title}>BMI: {bmi.toFixed(2)}</Text>
-                </View>
-                <View style={styles.group}>
                     <TouchableOpacity style={styles.button}
-                        onPress={compute}>
+                        onPress={() => compute(weight, height)}>
                         <Text style={styles.buttonText}>Compute</Text>
                     </TouchableOpacity>
+                </View>
+                <View style={styles.group}>
+                    <Text style={styles.title}>BMI: {bmi.toFixed(2)}</Text>
+                    <Text style={styles.resultText}>{bmiResult}</Text>
                 </View>
             </View>
         </View>
